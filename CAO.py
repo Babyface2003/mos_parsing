@@ -7,14 +7,15 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 import pandas as pd
 import os
-import shutil
 import glob
+import shutil
 import time
-def parse_ZAO(driver):
+
+def parse_CAO(driver):
     download_path = "D:\Work\Save_mos_ru"
     op = Options()
     op.add_argument('--disable-notifications')
-    op.add_experimental_option("prefs",{
+    op.add_experimental_option("prefs", {
         "download.prompt_for_download": False,
         "download.directory_upgrade": True,
         "safebrowsing.enabled": True
@@ -29,12 +30,12 @@ def parse_ZAO(driver):
 
     driver.get("https://controlpp.mos.ru/processor/back-office/login.faces")
 
-    #вводим логин
+    # вводим логин
 
     login_field = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "j_username")))
     login_field.send_keys("...")
 
-    #вводим пароль
+    # вводим пароль
 
     password_field = driver.find_element(By.ID, "j_password")
     password_field.send_keys("...")
@@ -42,11 +43,11 @@ def parse_ZAO(driver):
 
     WebDriverWait(driver, 10).until(EC.url_matches("https://controlpp.mos.ru/processor/back-office/index.faces"))
 
-
     dropdown_element = driver.find_element(By.ID, "mainMenuSubView:mainMenuForm:reportOnlineGroupMenu:hdr")
     dropdown_element.click()
 
-    dropdown_menu = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "mainMenuSubView:mainMenuForm:salesReportGroupMenu")))
+    dropdown_menu = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.ID, "mainMenuSubView:mainMenuForm:salesReportGroupMenu")))
     dropdown_items = dropdown_menu.find_elements(By.XPATH, ".//li")
 
     for item in dropdown_items:
@@ -65,10 +66,10 @@ def parse_ZAO(driver):
 
     # Ждем некоторое время после открытия второго выпадающего списка
 
-
     # Подождать, пока новый выпадающий список загрузится
     WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.XPATH, "//div[@id='mainMenuSubView:mainMenuForm:salesReportGroupMenu:cnt']"))
+        EC.visibility_of_element_located(
+            (By.XPATH, "//div[@id='mainMenuSubView:mainMenuForm:salesReportGroupMenu:cnt']"))
     )
 
     # Найти и нажать на кнопку "Сводный отчет по продажам"
@@ -86,7 +87,7 @@ def parse_ZAO(driver):
 
     #Выбираем Верону
     verona = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '/html/body/div[56]/div[3]/div/form/table[3]/tbody/tr/td/table/tbody[1]/tr[2]/td[2]')))
+        EC.presence_of_element_located((By.XPATH, '/html/body/div[56]/div[3]/div/form/table[3]/tbody/tr/td/table/tbody[1]/tr[3]')))
     verona.click()
 
     #Нажимаем ОК
@@ -104,22 +105,22 @@ def parse_ZAO(driver):
         EC.presence_of_element_located((By.XPATH, '/html/body/div[56]/div[3]/div/form/table/tbody/tr[1]/td/table[1]/tbody/tr/td[1]/table/tbody/tr/td/table'
                                                   '/tbody/tr[3]/td/div/table/tbody/tr/td/table[5]/tbody/tr/td[1]/input')))
     dop_study_button1.click()
-
+    time.sleep(1)
     dop_study_button2 = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '/html/body/div[56]/div[3]/div/form/table/tbody/tr[1]/td/table[1]/tbody/tr/td[1]/table/tbody/tr/td'
                                                   '/table/tbody/tr[3]/td/div/table/tbody/tr/td/table[2]/tbody/tr/td[1]/input')))
     dop_study_button2.click()
+    time.sleep(1)
+    #Выпадающий список для того, чтобы выбрать округ ЗЕЛАО
 
-    #Выпадающий список для того, чтобы выбрать округ например ЗАО
-
-    zao_district_list = WebDriverWait(driver, 10).until(
+    cao_district_list = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '/html/body/div[56]/div[3]/div/form/table/tbody/tr[1]/td/table[1]/tbody/tr/td[1]/table/tbody/tr/td/table'
                                                   '/tbody/tr[2]/td/table/tbody/tr[5]/td[2]/select')))
-    zao_district_list.click()
-
+    cao_district_list.click()
     time.sleep(1)
-    select_zao = Select(zao_district_list)
-    select_zao.select_by_value('ЗАО')
+
+    select_cao = Select(cao_district_list)
+    select_cao.select_by_value('САО')
 
     #Нажимаем на кнопку выбрать всё
     select_all = WebDriverWait(driver, 10).until(
@@ -143,8 +144,8 @@ def parse_ZAO(driver):
         EC.presence_of_element_located((By.XPATH,'/html/body/table/tbody/tr[2]/td[2]/form/div/div[2]/span/table/tbody'
                                                  '/tr/td/table/tbody/tr[1]/td/div/table/tbody/tr[4]/td[2]/select')))
     select_data.click()
-
     time.sleep(1)
+
     select_data_to_do = Select(select_data)
     select_data_to_do.select_by_value('ONE_DAY')
 
@@ -154,9 +155,7 @@ def parse_ZAO(driver):
         EC.presence_of_element_located((By.XPATH, '/html/body/table/tbody/tr[2]/td[2]/form/div/div[2]/span/table/tbody/tr/td/table/tbody/tr[2]/td'
                                                   '/table/tbody/tr/td[2]/input')))
     download_fail.click()
-
     time.sleep(1)
-
 
     # Находим все файлы с расширением .xls в директории загрузки
     xls_files = glob.glob(os.path.join(download_path, "*.xls"))
@@ -167,10 +166,10 @@ def parse_ZAO(driver):
         latest_xls_file = max(xls_files, key=os.path.getctime)
 
         # Переименовываем последний файл в желаемое имя
-        new_filename = os.path.join(download_path, "ЗАО.xls")  # Замените на желаемое новое имя файла
+        new_filename = os.path.join(download_path, "САО.xls")  # Замените на желаемое новое имя файла
         shutil.move(latest_xls_file, new_filename)
 
     time.sleep(2)
-    # Возвращаем данные
-    return pd.DataFrame({"district": ["ZAO", "ZELAO", "CAO"]})
+
+    return pd.DataFrame({"district": ["ZAO", "ZELAO","CAO"]})
 
