@@ -33,12 +33,12 @@ def parse_CAO(driver):
     # вводим логин
 
     login_field = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "j_username")))
-    login_field.send_keys("...")
+    login_field.send_keys("ShirokovaNI")
 
     # вводим пароль
 
     password_field = driver.find_element(By.ID, "j_password")
-    password_field.send_keys("...")
+    password_field.send_keys("b405deGB1")
     password_field.send_keys(Keys.RETURN)
 
     WebDriverWait(driver, 10).until(EC.url_matches("https://controlpp.mos.ru/processor/back-office/index.faces"))
@@ -86,9 +86,9 @@ def parse_CAO(driver):
     three_point.click()
 
     #Выбираем Верону
-    verona = WebDriverWait(driver, 10).until(
+    rsc = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '/html/body/div[56]/div[3]/div/form/table[3]/tbody/tr/td/table/tbody[1]/tr[3]')))
-    verona.click()
+    rsc.click()
 
     #Нажимаем ОК
     OK = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[56]/div[3]/div/form/table[4]/tbody/tr/td[1]/input')))
@@ -105,13 +105,14 @@ def parse_CAO(driver):
         EC.presence_of_element_located((By.XPATH, '/html/body/div[56]/div[3]/div/form/table/tbody/tr[1]/td/table[1]/tbody/tr/td[1]/table/tbody/tr/td/table'
                                                   '/tbody/tr[3]/td/div/table/tbody/tr/td/table[5]/tbody/tr/td[1]/input')))
     dop_study_button1.click()
+
     time.sleep(1)
     dop_study_button2 = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '/html/body/div[56]/div[3]/div/form/table/tbody/tr[1]/td/table[1]/tbody/tr/td[1]/table/tbody/tr/td'
                                                   '/table/tbody/tr[3]/td/div/table/tbody/tr/td/table[2]/tbody/tr/td[1]/input')))
     dop_study_button2.click()
     time.sleep(1)
-    #Выпадающий список для того, чтобы выбрать округ ЗЕЛАО
+    #Выпадающий список для того, чтобы выбрать округ
 
     cao_district_list = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '/html/body/div[56]/div[3]/div/form/table/tbody/tr[1]/td/table[1]/tbody/tr/td[1]/table/tbody/tr/td/table'
@@ -171,5 +172,5 @@ def parse_CAO(driver):
 
     time.sleep(2)
 
-    return pd.DataFrame({"district": ["ZAO", "ZELAO","CAO"]})
+    return pd.DataFrame({"district": ["ZAO", "ZELAO","CAO","CZAO","CVAO","CAD","CAD_DOP","UAO","UVAO","UZAO"]})
 
