@@ -33,12 +33,12 @@ def parse_CAO(driver):
     # вводим логин
 
     login_field = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "j_username")))
-    login_field.send_keys("ShirokovaNI")
+    login_field.send_keys("...")
 
     # вводим пароль
 
     password_field = driver.find_element(By.ID, "j_password")
-    password_field.send_keys("b405deGB1")
+    password_field.send_keys("...")
     password_field.send_keys(Keys.RETURN)
 
     WebDriverWait(driver, 10).until(EC.url_matches("https://controlpp.mos.ru/processor/back-office/index.faces"))
